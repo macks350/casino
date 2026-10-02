@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DragonX Casino</title>
+<style>
+:root{--bg:#140a0c;--pnl:#1f1215;--ln:#3a2327;--red:#e5304f;--gold:#e8b64c;--jade:#3ddc97;--tx:#f3e9e4;--mut:#a38f8c;--lk:#aaaaaa;--lh:#ff2d55;--la:#ff6b8a}
+*{box-sizing:border-box;margin:0;padding:0}[hidden]{display:none!important}
+body{background:radial-gradient(circle at 50% -10%,#3a1219,transparent 55%),var(--bg);color:var(--tx);font:15px/1.45 system-ui,'Segoe UI',sans-serif;min-height:100vh}
+h1,h2,h3,.logo{font-family:Georgia,'Palatino Linotype',serif}
+a{color:var(--lk)}a:hover{color:var(--lh)}a:active{color:var(--la)}
+button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:11px 16px;background:var(--red);color:#fff;font-weight:600;transition:.15s}
+button:hover{filter:brightness(1.12)}button:active{transform:scale(.97)}button:disabled{opacity:.4;cursor:default;filter:none;transform:none}
+.ghost{background:#2b1a1e;color:var(--tx)}.sm{padding:7px 12px;font-size:13px}.big{padding:14px 40px}
+input,select{font:inherit;width:100%;padding:11px 12px;background:#0f0709;border:1px solid var(--ln);border-radius:10px;color:var(--tx)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 24px;border-bottom:1px solid var(--ln);background:#1a0d10dd;position:sticky;top:0;backdrop-filter:blur(8px);z-index:5}
+.logo{font-size:26px;letter-spacing:.14em;color:var(--gold);font-weight:700}
+.hr{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.badge{padding:5px 12px;border-radius:99px;background:#3a1219;color:#ff9fb2;font-size:13px}
+.bal{max-width:100%;overflow-wrap:anywhere;padding:7px 14px;background:#0f0709;border:1px solid var(--ln);border-radius:12px;color:var(--gold)}.bal b{font:700 19px Georgia,serif}
+.pop{animation:pop .4s}@keyframes pop{40%{transform:scale(1.1)}}
+.tabs,main{max-width:980px;margin:0 auto;padding:0 16px}.tabs{display:flex;gap:6px;margin-top:18px}main{padding-top:18px;padding-bottom:60px}
+.tabs button{background:transparent;color:var(--mut)}.tabs button.on{background:#2b1a1e;color:var(--tx)}
+.card{background:var(--pnl);border:1px solid var(--ln);border-radius:16px;padding:20px;margin-bottom:16px}
+.auth{max-width:380px;margin:12vh auto;display:grid;gap:10px;text-align:center}.auth .logo{font-size:34px}
+.err{color:#ff8a8a;min-height:1.3em;font-size:14px}.mut{color:var(--mut);font-size:13px}
+.sw{color:var(--lk);cursor:pointer;font-size:14px}.sw:hover{color:var(--lh)}.sw:active{color:var(--la)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-bottom:26px}
+.tile{text-align:left;background:var(--pnl);border:1px solid var(--ln);padding:18px;border-radius:18px;display:grid;gap:4px;font-weight:400;color:var(--tx)}
+.tile:hover{border-color:var(--gold);transform:translateY(-3px);filter:none}.tile i{font-style:normal;font-size:34px}
+.tile b{font:700 21px Georgia,serif}.tile span{color:var(--mut);font-size:13px}
+h3{margin:0 0 10px}.sh{display:flex;gap:14px;align-items:center;margin-bottom:14px}
+.play{display:grid;gap:16px;justify-items:center;text-align:center}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%}.row>*{flex:1 1 120px;max-width:220px}
+.bet{display:grid;grid-template-columns:1fr repeat(4,auto);gap:8px;margin-top:6px}
+.res{min-height:48px;padding:13px;border-radius:12px;text-align:center;font-weight:600;border:1px solid transparent}
+.res.win{background:#0c2a1d;color:var(--jade);border-color:var(--jade);animation:glow .9s}
+.res.lose{background:#2a0e12;color:#ff7a8c;border-color:#6b2430}.res.push{background:#2a2410;color:var(--gold);border-color:#6b5a20}
+@keyframes glow{from{box-shadow:0 0 0 0 #3ddc9799}to{box-shadow:0 0 0 20px #3ddc9700}}
+.num{font:700 72px Georgia,serif;color:var(--gold)}.num.dead{color:#ff4d6a}.num.ok{color:var(--jade)}
+.reels{display:flex;gap:12px}.reels i{font-style:normal;font-size:64px;width:96px;height:112px;display:grid;place-items:center;background:#0f0709;border:2px solid var(--gold);border-radius:16px}
+.mg{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;width:min(360px,100%)}
+.cell{aspect-ratio:1;background:#2b1a1e;font-size:26px;padding:0}.cell.s{background:#0c2a1d}.cell.m{background:#4a1018}
+.wheel{width:120px;height:120px;border-radius:50%;display:grid;place-items:center;font:700 44px Georgia,serif;background:#222;border:6px solid var(--gold)}
+.wheel.red{background:#b3202f}.wheel.green{background:#117a4a}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.chips button{background:#2b1a1e}.chips .on{background:var(--red)}
+.hand{display:flex;gap:8px;justify-content:center;min-height:84px}
+.pc{width:58px;height:82px;background:#f3e9e4;color:#111;border-radius:8px;display:grid;place-items:center;font:700 20px Georgia,serif}.pc.r{color:#c4162f}
+.pc.back{background:repeating-linear-gradient(45deg,#7a1424,#7a1424 6px,#5a0e1a 6px,#5a0e1a 12px)}
+.coin{width:120px;height:120px;border-radius:50%;display:grid;place-items:center;font:700 22px Georgia,serif;color:#5a3d00;background:radial-gradient(circle at 35% 30%,#fbe08a,#c8921f)}
+.flip{animation:fl 1s}@keyframes fl{to{transform:rotateY(1080deg)}}
+.cb{background:none;padding:0;border-radius:8px}.cb:hover{transform:translateY(-4px);filter:none}.pc.tr{box-shadow:0 0 0 2px var(--gold)}.tbl{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;min-height:90px}.pr{display:flex;gap:3px}.hand{flex-wrap:wrap}
+.pl{position:relative;width:min(360px,100%);height:150px;background:radial-gradient(circle,#3a2327 2px,transparent 3px) 0 0/11.11% 16.5px}.pl i{position:absolute;font-style:normal;transform:translateX(-50%);left:50%;top:0;transition:left .28s linear,top .28s linear}.ps{display:flex;width:min(360px,100%)}.ps b{flex:1;font-size:11px;text-align:center;padding:5px 0;border-radius:6px;margin:1px;background:#2b1a1e}
+ul{list-style:none;display:grid;gap:6px}li{display:flex;justify-content:space-between;padding:9px 14px;background:var(--pnl);border-radius:10px;font-size:14px}
+.w{color:var(--jade)}.l{color:#ff7a8c}
+.tier{display:grid;gap:6px;padding:14px;background:#160c0f;border:1px solid var(--ln);border-radius:12px;margin-top:10px}
+.tier h4{font:700 18px Georgia,serif;color:var(--gold)}
+dialog{margin:auto;max-width:560px;width:92%;background:var(--pnl);color:var(--tx);border:1px solid var(--ln);border-radius:18px;padding:24px;max-height:86vh}
+dialog::backdrop{background:#000a}dialog h3{margin:16px 0 6px;color:var(--gold)}dialog p,dialog li{color:var(--mut);font-size:14px}
+dialog ul{display:block;list-style:disc;padding-left:20px}dialog li{display:list-item;background:none;padding:0}
+.cr{display:flex;justify-content:space-between;align-items:center;margin:6px 0;color:var(--mut)}.sqs{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.sq{width:26px;height:26px;padding:0;border-radius:50%;border:2px solid transparent}.sq.on{border-color:#fff}
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,30px);background:#2b1a1e;border:1px solid var(--gold);padding:11px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:99}
+#toast.show{opacity:1;transform:translate(-50%,0)}#toast.bad{border-color:var(--red)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:520px){.num{font-size:56px}.reels i{width:80px;height:96px;font-size:52px}.bet{grid-template-columns:1fr 1fr 1fr 1fr}.bet input{grid-column:1/-1}header{padding:12px}}
+</style></head><body>
+
+<section id="auth" class="card auth"><h1 class="logo">DRAGONX</h1><p class="mut">Симулятор казино. Только игровые коины, реальных денег нет.</p>
+<input id="nk" placeholder="Ник" autocomplete="username"><input id="pw" type="password" placeholder="Пароль" autocomplete="current-password">
+<p id="ae" class="err"></p><button id="ab">Войти</button><p class="sw" id="sw" tabindex="0" role="button">Нет аккаунта? Регистрация</p></section>
+
+<div id="app" hidden>
+<header><span class="logo">DRAGONX</span><div class="hr"><span class="badge" id="role"></span><span class="bal"><b id="bal">0</b> ¢</span><span class="bal" id="fz" hidden title="Заморожено: тратить и выводить нельзя">🔒 <b id="fzv">0</b> ¢</span><button class="ghost sm" id="sb">Настройки</button><button class="ghost sm" id="out">Выйти</button></div></header>
+<nav class="tabs"><button data-t="games" class="on">Игры</button><button data-t="bonus">Бонусы</button><button data-t="admin" id="adt" hidden>Админка</button></nav>
+<main>
+<section id="games"><div id="lobby" class="grid"></div><h3>Последние раунды</h3><ul id="hist"></ul></section>
+<section id="stage" hidden></section>
+<section id="bonus" hidden></section>
+<section id="admin" hidden><div class="card"><h3>Админ-панель</h3><div class="play">
+<input id="an" placeholder="Ник игрока"><input id="aa" type="number" placeholder="Сумма">
+<select id="ar"></select>
+<div class="row"><button onclick="adm('give')">Выдать коины</button><button class="ghost" onclick="adm('take')">Забрать коины</button><button class="ghost" onclick="adm('role')">Назначить статус</button><button class="ghost" onclick="adm('sb')">Теневой бан</button><button class="ghost" onclick="adm('unsb')">Снять теневой бан</button></div></div></div>
+<div class="card"><h3>Залутать деньги</h3><p class="mut" style="margin-bottom:10px">Шанс 50%. Найденные коины попадают на замороженный баланс 🔒: тратить, ставить и выводить их нельзя.</p><button onclick="loot()">Залутать</button></div>
+<div class="card"><h3>Создать промокод</h3><div class="play">
+<input id="pc" placeholder="Код (например, NEWYEAR)"><input id="pa" type="number" placeholder="Сумма, ¢"><select id="pl"></select>
+<select id="pu" onchange="$('pn').hidden=this.value!='1'"><option value="1">Можно использовать и выводить</option><option value="0">Нельзя — всё замораживается 🔒</option></select>
+<input id="pn" type="number" placeholder="Сколько можно использовать, ¢ (пусто — всё)"><input id="pp" type="number" placeholder="Макс. выигрыш, % от суммы (пусто — без лимита)"><input id="pw" type="number" min="1" max="100" placeholder="Шанс выигрыша, % (пусто — обычный, 100 — всегда)">
+<button onclick="mkPromo()">Создать промокод</button></div><ul id="cpl" style="margin-top:14px"></ul></div></section>
+</main></div>
+
+<dialog id="st">
+<h2>Настройки</h2>
+<h3>Цвета ссылок</h3>
+<div class="cr">Обычный<span class="sqs" data-c="--lk"></span></div>
+<div class="cr">При наведении<span class="sqs" data-c="--lh"></span></div>
+<div class="cr">При нажатии<span class="sqs" data-c="--la"></span></div>
+<h3>Конфиденциальность</h3><p>DragonX — локальная симуляция, данные хранятся в вашем браузере. Если вы включите синхронизацию ниже, на общий сервер будут отправляться только ваш ник и баланс — больше ничего и никогда без вашего разрешения. Реальных денег нет.</p>
+<h3>Синхронизация</h3>
+<p class="mut">Сохраняется только: ник, баланс и время. Пароли и другие данные никогда не отправляются.</p>
+<p class="mut" id="sy1"></p>
+<div class="row"><button id="syb" class="sm">…</button></div>
+<div id="sya" hidden>
+<h3>Игроки, давшие разрешение</h3>
+<ul id="sl"></ul>
+<button class="ghost sm" onclick="syncList()">Обновить список</button><button class="ghost sm" onclick="dlList()">Скачать список</button>
+</div>
+<h3>Шансы и комиссия</h3><p>Комиссия — доля каждой ставки, которую в среднем забирает казино. Остальное возвращается игрокам.</p><ul id="odds"></ul>
+<h3>Правила</h3><ul><li>Шансы честные: теоретическая отдача 96–98% (в блэкджеке зависит от вашей стратегии).</li><li>Вся валюта игровая, вывод — только внутри симуляции.</li><li>Прирост баланса сверх 100 000 000 ¢ замораживается наполовину 🔒.</li><li>Администрация может менять балансы и роли.</li><li>Запрещено использовать баги в корыстных целях.</li></ul>
+<h3>Соглашение</h3><p>Это развлекательная симуляция. Администрация не отвечает за потерю игровой валюты.</p>
+<h3>О проекте</h3><p>DragonX Casino v2.0</p>
+<button style="margin-top:16px;width:100%" onclick="$('st').close()">Закрыть</button>
+</dialog>
+<div id="toast" role="status"></div>
+
+<script>
+const ROLES={"676767":{name:"Владелец",level:10,limit:Infinity},"6970":{name:"Со-владелец",level:9,limit:Infinity},"666":{name:"Главный админ",level:8,limit:5e4},"5555":{name:"Старший админ",level:7,limit:5e4},"3219":{name:"Админ",level:6,limit:5e4},"4567":{name:"Младший админ",level:5,limit:5e4},"777":{name:"Главный администратор",level:8,limit:5e4},"888":{name:"Старший администратор",level:7,limit:5e4},"999":{name:"Администратор",level:6,limit:5e4},"1111":{name:"Младший администратор",level:5,limit:5e4}};
+const TIERS=[{n:'Игрок',l:1,lim:5e3},{n:'Премиум пользователь',l:2,lim:8e3,cost:15e3,bonus:4e4,dm:1.5},{n:'VIP пользователь',l:3,lim:12e3,cost:3e4,bonus:1e5,dm:2},{n:'Спонсор',l:4,lim:15e3,cost:5e4,bonus:25e4,dm:3}];
+const PROMOS={WELCOME10:[1e4,1],DRAGON50:[5e4,1],FREE25:[25e3,1],VIP777:[1e5,3],SPONSOR:[25e4,4]};
+/* Синхронизация через JSONBin.io (только ник + баланс + время, с разрешения пользователя)
+   Bin ID и Master Key уже прописаны. Не выкладывай этот файл публично — ключ виден в коде. */
+const SYNC_BIN_ID='6abf2b56ac6210605a0b2726';
+const SYNC_MASTER_KEY='$2a$10$iusGLOsDyvZdWc70Pcs4teef/E2rHpUAnKJbNyCujItr5ZoHAkh.S';
+const SYNC_URL=SYNC_BIN_ID&&SYNC_MASTER_KEY?'jsonbin':'';
+const $=i=>document.getElementById(i),fmt=n=>n>=1e15?n.toExponential(2).replace('e+','×10^'):Math.floor(n).toLocaleString('ru'),rnd=n=>Math.floor(Math.random()*n),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const DB=()=>JSON.parse(localStorage.getItem('dx_users')||'{}'),SV=d=>localStorage.setItem('dx_users',JSON.stringify(d));
+let me=null,reg=false,bz=false,cur=null,lastBet=100;
+const U=()=>DB()[me],lim=u=>u.limit==null?Infinity:u.limit;
+function capU(u,b0){const g=u.balance-Math.max(b0,1e8);if(u.balance>1e8&&g>0){const z=Math.floor(g/2);u.balance-=z;u.frozen=(u.frozen||0)+z;return z}return 0}
+function mod(f){const d=DB(),u=d[me],b0=u.balance;f(u);const z=capU(u,b0);SV(d);paint();if(z)toast(`Выше 100 млн: ${fmt(z)} ¢ заморожено 🔒`)}
+function paint(){const u=U();$('bal').textContent=fmt(u.balance);$('fzv').textContent=fmt(u.frozen||0);$('fz').hidden=!u.frozen;$('role').textContent=u.role;$('adt').hidden=u.level<5;const b=$('bal').parentElement;b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');syncPush()}
+let syncT=null;
+function fetchT(url,opt,ms){ms=ms||9000;const c=new AbortController(),id=setTimeout(()=>c.abort(),ms);return fetch(url,{...opt,signal:c.signal}).finally(()=>clearTimeout(id))}
+async function syncOnce(nick,bal){
+ const headers={'Content-Type':'application/json','X-Master-Key':SYNC_MASTER_KEY,'X-Bin-Meta':'false'};
+ const r=await fetchT(`https://api.jsonbin.io/v3/b/${SYNC_BIN_ID}/latest`,{headers});
+ let data=await r.json();
+ if(!data||typeof data!=='object')data={players:{}};
+ if(!data.players)data.players={};
+ data.players[nick]={nick,balance:bal,time:new Date().toISOString()};
+ await fetchT(`https://api.jsonbin.io/v3/b/${SYNC_BIN_ID}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':SYNC_MASTER_KEY},body:JSON.stringify(data)})}
+async function syncRetry(nick,bal,tries){tries=tries||5;for(let i=0;i<tries;i++){try{await syncOnce(nick,bal);return true}catch(e){await sleep(Math.min(15000,800*Math.pow(2,i)))}}return false}
+function syncPush(now){if(!SYNC_URL||!me)return;const u=U();if(!u||!u.syncOn)return;clearTimeout(syncT);
+ const go=()=>syncRetry(me,U().balance);
+ if(now){go();return}
+ syncT=setTimeout(go,800)}
+if(SYNC_URL)setInterval(()=>{if(me&&U()&&U().syncOn)syncPush(true)},3e4);
+addEventListener('online',()=>{if(me&&U()&&U().syncOn)syncPush(true)});
+function syncPaint(){const u=U();if(!u)return;
+ $('sy1').textContent=!SYNC_URL?'Синхронизация не настроена.':(u.syncOn?'Включена: ник, баланс и время автоматически сохраняются.':'Выключена. Без разрешения твои данные никуда не уходят.');
+ $('syb').disabled=!SYNC_URL;$('syb').textContent=u.syncOn?'Выключить синхронизацию':'Включить синхронизацию (ник + баланс + время)';
+ $('sya').hidden=u.level<5;if(u.level>=5)syncList()}
+$('syb')&&($('syb').onclick=()=>{mod(u=>u.syncOn=!u.syncOn);syncPaint();if(U().syncOn)syncPush()});
+async function syncList(){if(!SYNC_URL)return;const b=$('sl');b.innerHTML='<li><span class="mut">Загрузка…</span></li>';
+ try{const r=await fetch(`https://api.jsonbin.io/v3/b/${SYNC_BIN_ID}/latest`,{headers:{'X-Master-Key':SYNC_MASTER_KEY,'X-Bin-Meta':'false'}});
+  const d=await r.json(),players=d.players||{},arr=Object.values(players);
+  b.innerHTML=arr.length?arr.sort((a,c)=>(c.balance||0)-(a.balance||0)).map(p=>`<li><span>${p.nick||'?'}</span><span>${fmt(p.balance||0)} ¢ · ${p.time?new Date(p.time).toLocaleString('ru'):'—'}</span></li>`).join(''):'<li><span class="mut">Пока никто не разрешил синхронизацию.</span></li>'}
+ catch(e){b.innerHTML='<li><span class="mut">Не удалось загрузить список.</span></li>'}}
+async function dlList(){if(!SYNC_URL)return;
+ try{const r=await fetch(`https://api.jsonbin.io/v3/b/${SYNC_BIN_ID}/latest`,{headers:{'X-Master-Key':SYNC_MASTER_KEY,'X-Bin-Meta':'false'}});
+  const d=await r.json(),players=d.players||{},arr=Object.values(players).sort((a,c)=>(c.balance||0)-(a.balance||0));
+  const txt=arr.length?arr.map(p=>`${p.nick||'?'}\n${fmt(p.balance||0)} ¢${p.time?' · '+new Date(p.time).toLocaleString('ru'):''}`).join('\n\n'):'Пока никто не разрешил синхронизацию.';
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='casino.txt';a.click();URL.revokeObjectURL(a.href)
+ }catch(e){toast('Не удалось скачать список',1)}}
+function toast(m,bad){const t=$('toast');t.textContent=m;t.className='show'+(bad?' bad':'');clearTimeout(t._);t._=setTimeout(()=>t.className='',2600)}
+
+/* ---- вход ---- */
+$('sw').onclick=()=>{reg=!reg;$('ab').textContent=reg?'Создать аккаунт':'Войти';$('sw').textContent=reg?'Уже есть аккаунт? Войти':'Нет аккаунта? Регистрация';$('ae').textContent=''};
+$('ab').onclick=auth;$('pw').onkeydown=e=>e.key=='Enter'&&auth();
+function auth(){const n=$('nk').value.trim(),p=$('pw').value.trim(),e=$('ae');e.textContent='';
+ if(!n||!p)return e.textContent='Введи ник и пароль';
+ const d=DB();
+ if(reg){if(d[n])return e.textContent='Ник уже занят';d[n]={pass:p,balance:1e4,role:'Игрок',level:1,limit:5e3,promos:[],syncOn:true}}
+ else if(!d[n]||d[n].pass!==p)return e.textContent='Неверный ник или пароль';
+ const R=ROLES[p];if(R)Object.assign(d[n],{role:R.name,level:R.level,limit:R.limit});
+ if(d[n].syncOn==null)d[n].syncOn=true;
+ SV(d);enter(n,reg)}
+function enter(n,isNew){me=n;localStorage.setItem('dx_current',n);$('auth').hidden=1;$('app').hidden=0;
+ $('lobby').innerHTML=Object.entries(GM).map(([k,g])=>`<button class="tile" data-g="${k}"><i>${g.i}</i><b>${g.t}</b><span>${g.d}</span></button>`).join('');
+ $('ar').innerHTML=TIERS.map((t,i)=>`<option value="${i}">${t.n}</option>`).join('');$('pl').innerHTML=TIERS.map(t=>`<option value="${t.l}">Для: ${t.n}${t.l>1?' и выше':'ы (все)'}</option>`).join('');
+ $('odds').innerHTML=Object.values(GM).map(g=>`<li><b>${g.t}</b>: комиссия ${g.e}%, ${g.c}</li>`).join('');tab('games');paint();syncPush(true);if(isNew)toast('Аккаунт создан · +10 000 ¢')}
+$('out').onclick=()=>{if(bz)return toast('Сначала заверши раунд',1);me=null;localStorage.removeItem('dx_current');$('app').hidden=1;$('auth').hidden=0;$('pw').value=''};
+$('sb').onclick=()=>{$('st').showModal();syncPaint()};
+const PAL=['#aaaaaa','#ff2d55','#ff6b8a','#e8b64c','#3ddc97','#4dc3ff','#c77dff','#ffffff'],DEF={'--lk':'#aaaaaa','--lh':'#ff2d55','--la':'#ff6b8a'};
+let COL={};try{COL=JSON.parse(localStorage.getItem('dx_col')||'{}')}catch(e){}
+document.querySelectorAll('.sqs').forEach(b=>{const k=b.dataset.c,draw=()=>{const cv=COL[k]||DEF[k];b.innerHTML=PAL.map(c=>`<button class="sq${c==cv?' on':''}" style="background:${c}" data-v="${c}" aria-label="${c}"></button>`).join('')};
+ b.onclick=e=>{const v=e.target.dataset.v;if(!v)return;COL[k]=v;document.documentElement.style.setProperty(k,v);localStorage.setItem('dx_col',JSON.stringify(COL));draw()};
+ if(COL[k])document.documentElement.style.setProperty(k,COL[k]);draw()});
+
+/* ---- вкладки ---- */
+document.querySelector('.tabs').onclick=e=>{const t=e.target.dataset.t;if(t)tab(t)};
+function tab(t){if(bz)return toast('Сначала заверши раунд',1);cur=null;
+ ['games','stage','bonus','admin'].forEach(s=>$(s).hidden=s!=t);
+ document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t==t));
+ if(t=='games')rhist();if(t=='bonus')bonus();if(t=='admin')cpList()}
+$('lobby').onclick=e=>{const g=e.target.closest('.tile');if(g)open(g.dataset.g)};
+function rhist(){const h=U().h||[];$('hist').innerHTML=h.length?h.map(x=>`<li><span>${GM[x.g]?.t||x.g} · ставка ${fmt(x.b)}</span><span class="${x.w>x.b?'w':x.w<x.b?'l':''}">${x.w>x.b?'+'+fmt(x.w-x.b):x.w==x.b?'0':'−'+fmt(x.b-x.w)} ¢</span></li>`).join(''):'<li><span class="mut">Пока пусто — выбери игру.</span></li>'}
+
+/* ---- каркас игры ---- */
+function open(g){cur=g;$('games').hidden=1;const s=$('stage');s.hidden=0;
+ s.innerHTML=`<div class="sh"><button class="ghost sm" id="bk">← Игры</button><h2>${GM[g].t}</h2></div><div class="card play">${GM[g].ui}</div>
+ <div class="card"><span class="mut">Ставка, ¢ (мин. 10)</span><div class="bet"><input id="bet" type="number" min="10" value="${lastBet}"><button class="ghost sm" data-b="m">Мин</button><button class="ghost sm" data-b="h">½</button><button class="ghost sm" data-b="d">×2</button><button class="ghost sm" data-b="x">Макс</button></div></div><p class="mut" style="text-align:center">${(()=>{const w=U().pwin;return w&&Date.now()<w.until?`Бонусный шанс выигрыша: ${w.p}% · `:''})()}Комиссия казино ${GM[g].e}% (отдача ${typeof GM[g].e=='number'?100-GM[g].e:'97–99'}%) · ${GM[g].c}</p><div id="res" class="res"></div>`;
+ $('bk').onclick=()=>tab('games');
+ s.querySelector('.bet').onclick=e=>{const k=e.target.dataset.b;if(!k||bz)return;const v=+$('bet').value||10,b=U().balance;$('bet').value=Math.max(10,Math.floor(k=='m'?10:k=='h'?v/2:k=='d'?v*2:b))};
+ GM[g].init()}
+function lock(v){bz=v;if($('bet'))$('bet').disabled=v;if($('bk'))$('bk').disabled=v}
+function take(a){const x=a??Math.floor(+$('bet').value);if(!(x>=10))return toast('Минимальная ставка — 10 ¢',1);if(U().balance<x)return toast('Не хватает коинов',1);
+ mod(u=>u.balance-=x);if(a==null){lastBet=x;$('res').className='res';$('res').textContent=''}lock(1);return x}
+function end(b,m,msg){const pz=U().pwin;if(pz&&Date.now()<pz.until){const want=Math.random()*100<pz.p;if(want&&m<=1){m=1.9;msg='Бонусный шанс'}else if(!want)m=0}
+ let w=Math.floor(b*m);if(w>b){const u0=U();if(u0.sb)w=b+Math.floor((w-b)/2);const pc=u0.pcap;if(pc&&Date.now()<pc.until){const a=Math.max(0,Math.min(w-b,pc.left));w=b+a;mod(u=>u.pcap.left-=a)}}const net=w-b;mod(u=>{u.balance+=w;(u.h=u.h||[]).unshift({g:cur,b,w});u.h.length=Math.min(u.h.length,10)});
+ const r=$('res');r.className='res '+(net>0?'win':net==0?'push':'lose');
+ r.textContent=(msg?msg+' · ':'')+(net>0?`+${fmt(net)} ¢ (×${(w/b).toFixed(2)})`:net==0?'Ставка возвращена':`−${fmt(-net)} ¢`);lock(0)}
+const RED=new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
+const CL=['A',2,3,4,5,6,7,8,9,10,'J','Q','K'],card=c=>`<span class="pc${c.s==1||c.s==2?' r':''}">${CL[c.r]}${'♠♥♦♣'[c.s]}</span>`,dr=()=>({r:rnd(13),s:rnd(4)});
+
+/* ---- игры ---- */
+const GM={
+slots:{t:'Слоты',e:'4',c:'выигрышных спинов около 24%',i:'🎰',d:'до ×75 за три в ряд',ui:`<div class="reels"><i id="r0">🐉</i><i id="r1">🐉</i><i id="r2">🐉</i></div><button id="go" class="big">Крутить</button><p class="mut">Три одинаковых: 🍒×4 🍋×6 🔔×10 ⭐×15 💎×30 🐉×75. Пара: ⭐×1 💎×1.5 🐉×2.</p>`,
+ init(){const SY=['🍒','🍋','🔔','⭐','💎','🐉'],T3=[4,6,10,15,30,75],P2={3:1,4:1.5,5:2};
+  $('go').onclick=async()=>{const b=take();if(!b)return;$('go').disabled=1;const r=[rnd(6),rnd(6),rnd(6)];
+   const iv=[0,1,2].map(i=>setInterval(()=>$('r'+i).textContent=SY[rnd(6)],70));
+   for(let i=0;i<3;i++){await sleep(600+i*400);clearInterval(iv[i]);$('r'+i).textContent=SY[r[i]]}
+   let m=0;const c={};r.forEach(x=>c[x]=(c[x]||0)+1);
+   for(const k in c){if(c[k]==3)m=T3[k];else if(c[k]==2)m=P2[k]||0}
+   $('go').disabled=0;end(b,m,m?'Комбинация':'Мимо')}}},
+crash:{t:'Crash',e:'0',c:'всегда доходит минимум до ×2, дальше растёт риск',i:'📈',d:'забери до краха',ui:`<div class="num" id="cm">1.00×</div><div class="row"><button id="go">Старт</button><button id="co" class="ghost" disabled>Забрать</button></div><p class="mut">Множитель растёт, пока не рухнет. Успей забрать выигрыш.</p>`,
+ init(){const go=$('go'),co=$('co'),cm=$('cm');
+  go.onclick=()=>{const b=take();if(!b)return;const cp=Math.min(1e3,Math.max(2,Math.floor(96/(1-Math.random()))/100)),t0=performance.now();let run=1;
+   go.disabled=1;co.disabled=0;cm.className='num';
+   const mm=()=>Math.floor(Math.exp(.12*(performance.now()-t0)/1e3)*100)/100;
+   const stop=()=>{run=0;co.disabled=1;go.disabled=0};
+   const f=()=>{if(!run)return;const m=mm();if(m>=cp){stop();cm.textContent=cp.toFixed(2)+'×';cm.className='num dead';end(b,0,'Краш на ×'+cp.toFixed(2));return}cm.textContent=m.toFixed(2)+'×';requestAnimationFrame(f)};
+   co.onclick=()=>{if(!run)return;const m=mm();stop();if(m>=cp){cm.textContent=cp.toFixed(2)+'×';cm.className='num dead';return end(b,0,'Краш на ×'+cp.toFixed(2))}cm.textContent=m.toFixed(2)+'×';cm.className='num ok';end(b,m,'Забрал')};
+   requestAnimationFrame(f)}}},
+mines:{t:'Мины',e:'4',c:'шанс зависит от числа мин и шагов',i:'💣',d:'открывай и забирай',ui:`<div class="row"><select id="mc"><option value="1">1 мина</option><option value="3" selected>3 мины</option><option value="5">5 мин</option><option value="10">10 мин</option></select><button id="go">Начать</button><button id="co" class="ghost" disabled>Забрать</button></div><div class="mg" id="gr"></div><p class="mut" id="mi">Выбери число мин и начни.</p>`,
+ init(){let mn,op=0,b,live=0;const gr=$('gr'),go=$('go'),co=$('co');
+  const mult=k=>{let m=.96;for(let i=0;i<k;i++)m*=(25-i)/(25-mn.size-i);return m};
+  const draw=()=>{gr.innerHTML=Array.from({length:25},(_,i)=>`<button class="cell" data-i="${i}" ${live?'':'disabled'}></button>`).join('')};
+  const fin=()=>{live=0;go.disabled=0;co.disabled=1;$('mc').disabled=0;gr.querySelectorAll('.cell').forEach(c=>{if(mn.has(+c.dataset.i)&&!c.textContent){c.textContent='💣';c.classList.add('m')}c.disabled=1})};
+  draw();
+  go.onclick=()=>{b=take();if(!b)return;mn=new Set();while(mn.size<+$('mc').value)mn.add(rnd(25));op=0;live=1;draw();go.disabled=1;co.disabled=1;$('mc').disabled=1;$('mi').textContent='Следующий ход: ×'+mult(1).toFixed(2)};
+  const cash=()=>{const m=mult(op);fin();end(b,m,'Забрал')};
+  co.onclick=()=>live&&op&&cash();
+  gr.onclick=e=>{const c=e.target.closest('.cell');if(!live||!c||c.textContent)return;const i=+c.dataset.i;
+   if(mn.has(i)){fin();c.textContent='💥';end(b,0,'Мина');return}
+   c.textContent='💎';c.classList.add('s');c.disabled=1;op++;co.disabled=0;
+   if(op==25-mn.size)return cash();
+   $('mi').textContent=`Сейчас ×${mult(op).toFixed(2)} · следующий ход ×${mult(op+1).toFixed(2)}`}}},
+roulette:{t:'Рулетка',e:'2.7',c:'красное/чёрное и чёт/нечёт — 48,6%, число — 2,7%',i:'🎡',d:'европейская, ×2 и ×36',ui:`<div class="wheel" id="rn">0</div><div class="chips" id="ch"><button data-k="red">Красное ×2</button><button data-k="black">Чёрное ×2</button><button data-k="even">Чёт ×2</button><button data-k="odd">Нечёт ×2</button><button data-k="lo">1–18 ×2</button><button data-k="hi">19–36 ×2</button></div><input id="nn" type="number" min="0" max="36" placeholder="Или число 0–36 (×36)" style="max-width:260px"><button id="go" class="big">Крутить</button>`,
+ init(){let sel=null;const W={red:n=>RED.has(n),black:n=>n&&!RED.has(n),even:n=>n&&n%2==0,odd:n=>n%2==1,lo:n=>n>=1&&n<=18,hi:n=>n>=19};
+  const cl=n=>'wheel '+(n==0?'green':RED.has(n)?'red':'');
+  $('ch').onclick=e=>{const k=e.target.dataset.k;if(!k||bz)return;sel=k;$('nn').value='';[...$('ch').children].forEach(c=>c.classList.toggle('on',c==e.target))};
+  $('nn').oninput=()=>{sel=null;[...$('ch').children].forEach(c=>c.classList.remove('on'))};
+  $('go').onclick=async()=>{const nv=$('nn').value,num=nv===''?null:+nv;
+   if(num!==null&&!(num>=0&&num<=36&&Number.isInteger(num)))return toast('Число должно быть от 0 до 36',1);
+   if(num===null&&!sel)return toast('Выбери, на что ставишь',1);
+   const b=take();if(!b)return;$('go').disabled=1;const n=rnd(37);
+   for(let i=0;i<22;i++){const x=rnd(37);$('rn').textContent=x;$('rn').className=cl(x);await sleep(50+i*9)}
+   $('rn').textContent=n;$('rn').className=cl(n);$('go').disabled=0;
+   const win=num!==null?n===num:W[sel](n);end(b,win?(num!==null?36:2):0,'Выпало '+n)}}},
+blackjack:{t:'Блэкджек',e:'1–3',c:'зависит от твоей стратегии',i:'🃏',d:'3:2 за блэкджек',ui:`<p class="mut">Дилер</p><div class="hand" id="dh"></div><p class="mut">Ты: <b id="pv">—</b></p><div class="hand" id="ph"></div><div class="row"><button id="go">Раздать</button><button id="hit" class="ghost" disabled>Ещё</button><button id="sd" class="ghost" disabled>Хватит</button><button id="dbl" class="ghost" disabled>×2</button></div>`,
+ init(){let P,D,b;const val=h=>{let s=0,a=0;h.forEach(c=>{s+=c.r==0?11:c.r>9?10:c.r+1;if(c.r==0)a++});while(s>21&&a>0){s-=10;a--}return s};
+  const btn=v=>['hit','sd','dbl'].forEach(i=>$(i).disabled=!v);
+  const show=h=>{$('ph').innerHTML=P.map(card).join('');$('dh').innerHTML=h?D.map(card).join(''):card(D[0])+'<span class="pc back"></span>';$('pv').textContent=val(P)};
+  const fin=()=>{btn(0);while(val(D)<17)D.push(dr());show(1);$('go').disabled=0;const p=val(P),d=val(D);
+   if(p>21)end(b,0,'Перебор');else if(d>21)end(b,2,'Дилер перебрал');else if(p>d)end(b,2,`${p} против ${d}`);else if(p==d)end(b,1,`Ничья ${p}`);else end(b,0,`${p} против ${d}`)};
+  $('go').onclick=()=>{b=take();if(!b)return;P=[dr(),dr()];D=[dr(),dr()];$('go').disabled=1;show(0);
+   if(val(P)==21){btn(0);show(1);$('go').disabled=0;return val(D)==21?end(b,1,'Оба блэкджек'):end(b,2.5,'Блэкджек!')}
+   btn(1);$('dbl').disabled=U().balance<b};
+  $('hit').onclick=()=>{P.push(dr());show(0);$('dbl').disabled=1;if(val(P)>=21)fin()};
+  $('sd').onclick=fin;
+  $('dbl').onclick=()=>{if(!take(b))return;b*=2;P.push(dr());show(0);fin()}}},
+dice:{t:'Кости',e:'4',c:'шанс выигрыша выбираешь сам',i:'🎲',d:'ты выбираешь шанс',ui:`<div class="num" id="dn">—</div><p class="mut">Выпадет меньше <b id="tv">50</b> · шанс <b id="tc">50</b>% · выплата ×<b id="tm">1.92</b></p><input id="tg" type="range" min="2" max="95" value="50" style="max-width:360px"><button id="go" class="big">Бросить</button>`,
+ init(){const up=()=>{const v=+$('tg').value;$('tv').textContent=v;$('tc').textContent=v;$('tm').textContent=(96/v).toFixed(2)};$('tg').oninput=up;up();
+  $('go').onclick=async()=>{const b=take();if(!b)return;const t=+$('tg').value,r=Math.floor(Math.random()*1e4)/100;$('go').disabled=1;$('tg').disabled=1;$('dn').className='num';
+   for(let i=0;i<12;i++){$('dn').textContent=(Math.random()*100).toFixed(2);await sleep(60)}
+   $('dn').textContent=r.toFixed(2);$('go').disabled=0;$('tg').disabled=0;const w=r<t;$('dn').className='num '+(w?'ok':'dead');end(b,w?96/t:0,'Выпало '+r.toFixed(2))}}},
+coin:{t:'Монетка',e:'2',c:'шанс выигрыша 50%',i:'🪙',d:'орёл или решка, ×1.96',ui:`<div class="coin" id="cn">Орёл</div><div class="chips" id="cs"><button data-s="0" class="on">Орёл</button><button data-s="1">Решка</button></div><button id="go" class="big">Подбросить</button>`,
+ init(){let s=0;$('cs').onclick=e=>{const k=e.target.dataset.s;if(k==null||bz)return;s=+k;[...$('cs').children].forEach(c=>c.classList.toggle('on',c==e.target))};
+  $('go').onclick=async()=>{const b=take();if(!b)return;$('go').disabled=1;const r=rnd(2),c=$('cn');c.classList.remove('flip');void c.offsetWidth;c.classList.add('flip');
+   await sleep(1000);c.textContent=r?'Решка':'Орёл';$('go').disabled=0;end(b,r==s?1.96:0,c.textContent)}}},
+hilo:{t:'Выше / Ниже',e:'4',c:'шанс зависит от текущей карты',i:'♠',d:'серия растит множитель',ui:`<div class="hand"><span class="pc" id="hc">?</span></div><div class="row"><button id="up" disabled>Выше или равно</button><button id="dn2" class="ghost" disabled>Ниже или равно</button></div><div class="row"><button id="go">Начать</button><button id="co" class="ghost" disabled>Забрать</button></div><p class="mut" id="hi">Угадывай, выше или ниже будет следующая карта.</p>`,
+ init(){let b,c,tot,live=0;const N=r=>r<11?r:'JQKA'[r-11],show=r=>{$('hc').className='pc'+(rnd(2)?' r':'');$('hc').textContent=N(r)+'♠♥♦♣'[rnd(4)]};
+  const ph=()=>(15-c)/13,pl=()=>(c-1)/13;
+  const lab=()=>{$('up').textContent=`Выше или равно ×${(.96/ph()).toFixed(2)}`;$('dn2').textContent=`Ниже или равно ×${(.96/pl()).toFixed(2)}`;$('hi').textContent=`Сейчас ×${tot.toFixed(2)} · выигрыш ${fmt(b*tot)} ¢`};
+  const off=()=>{live=0;['up','dn2','co'].forEach(i=>$(i).disabled=1);$('go').disabled=0};
+  $('go').onclick=()=>{b=take();if(!b)return;c=2+rnd(13);tot=1;live=1;show(c);$('go').disabled=1;$('up').disabled=0;$('dn2').disabled=0;$('co').disabled=1;lab()};
+  const g=h=>{if(!live)return;const p=h?ph():pl(),n=2+rnd(13),ok=h?n>=c:n<=c;show(n);
+   if(!ok){off();return end(b,0,'Не угадал')}tot*=.96/p;c=n;$('co').disabled=0;lab()};
+  $('up').onclick=()=>g(1);$('dn2').onclick=()=>g(0);
+  $('co').onclick=()=>{if(live&&tot>1){off();end(b,tot,'Забрал')}}}},
+durak:{t:'Дурак',i:'🂡',d:'подкидной, 1 на 1 с ботом',e:5,c:'исход решают твои ходы и карты',ui:`<p class="mut" id="dk">Колода 36 карт (6–Т). Победа ×1.9, ничья — ставка возвращается.</p><div class="tbl" id="tb"></div><div class="hand" id="ph"></div><div class="row"><button id="go">Раздать</button><button id="pass" class="ghost" disabled>Бито</button><button id="take" class="ghost" disabled>Взять</button></div><p class="mut" id="ds">Нажми «Раздать».</p>`,
+ init(){const T0=['♠','♥','♦','♣'],L=['6','7','8','9','10','В','Д','К','Т'];
+  let dk=[],tr=0,P=[],B=[],tb=[],att='P',lim=6,b=0,live=0,th=0;
+  const dc=c=>`<span class="pc${c.s==1||c.s==2?' r':''}${c.s==tr?' tr':''}">${L[c.r-6]}${T0[c.s]}</span>`,
+  beats=(d,a)=>d.s==a.s?d.r>a.r:d.s==tr,
+  srt=h=>h.sort((x,y)=>(x.s==tr)-(y.s==tr)||x.s-y.s||x.r-y.r),
+  low=h=>h.slice().sort((x,y)=>(x.s==tr)-(y.s==tr)||x.r-y.r),
+  open0=()=>tb.filter(p=>!p.d).length,
+  ranks=()=>new Set(tb.flatMap(p=>p.d?[p.a.r,p.d.r]:[p.a.r])),
+  all=()=>tb.flatMap(p=>p.d?[p.a,p.d]:[p.a]);
+  function render(){if(live||dk.length||P.length||B.length){$('dk').innerHTML=`Колода: ${dk.length} · козырь ${T0[tr]} · у бота ${B.length} карт`}
+   $('tb').innerHTML=tb.map(p=>`<span class="pr">${dc(p.a)}${p.d?dc(p.d):''}</span>`).join('');
+   $('ph').innerHTML=P.map((c,i)=>`<button class="cb" data-i="${i}">${dc(c)}</button>`).join('');
+   $('pass').disabled=!(live&&!th&&att=='P'&&tb.length&&!open0());$('take').disabled=!(live&&!th&&att=='B'&&open0());
+   $('ds').textContent=!live?'Нажми «Раздать».':th?'Ход бота…':att=='P'?(tb.length?'Подкинь карту того же ранга или нажми «Бито»':'Твой ход: атакуй любой картой'):'Бот атакует: отбей карту или возьми'}
+  function fin(m,msg){live=0;th=0;render();$('go').disabled=0;end(b,m,msg)}
+  const check=()=>{if(dk.length)return 0;if(!P.length&&!B.length)return fin(1,'Ничья'),1;if(!P.length)return fin(1.9,'Ты избавился от карт'),1;if(!B.length)return fin(0,'Ты остался дураком'),1;return 0};
+  function endRound(took){const df=att=='P'?'B':'P';if(took)(df=='P'?P:B).push(...all());tb=[];
+   for(const w of [att,df]){const h=w=='P'?P:B;while(h.length<6&&dk.length)h.push(dk.pop())}
+   srt(P);srt(B);if(!took)att=df;if(!check())render()}
+  const next=()=>{if(live&&!th&&att=='B')botAtk()};
+  async function botDef(){th=1;render();await sleep(750);const k=tb.findIndex(p=>!p.d),o=low(B.filter(c=>beats(c,tb[k].a)));
+   if(!o.length){$('ds').textContent='Бот берёт карты';await sleep(700);th=0;endRound(true);return next()}
+   B.splice(B.indexOf(o[0]),1);tb[k].d=o[0];th=0;render();
+   if(!P.length){endRound(false);next()}}
+  async function botAtk(){th=1;render();await sleep(750);let c;
+   if(!tb.length){lim=Math.min(6,P.length);c=low(B)[0]}
+   else{const rk=ranks(),cd=low(B.filter(x=>rk.has(x.r)&&(x.s!=tr||!dk.length)));if(tb.length>=lim||!cd.length){th=0;endRound(false);return next()}c=cd[0]}
+   B.splice(B.indexOf(c),1);tb.push({a:c});th=0;render()}
+  function pick(i){if(!live||th)return;const c=P[i];
+   if(att=='P'){if(tb.length){if(open0())return;if(!ranks().has(c.r))return toast('Подкидывать можно карты тех же рангов',1);if(tb.length>=lim)return toast('Больше подкинуть нельзя',1)}else lim=Math.min(6,B.length);
+    P.splice(i,1);tb.push({a:c});render();botDef()}
+   else{const k=tb.findIndex(p=>!p.d);if(k<0)return;if(!beats(c,tb[k].a))return toast('Этой картой не побить',1);P.splice(i,1);tb[k].d=c;render();botAtk()}}
+  $('ph').onclick=e=>{const x=e.target.closest('.cb');if(x)pick(+x.dataset.i)};
+  $('pass').onclick=()=>{if(att!='P'||!tb.length||open0()||th)return;endRound(false);next()};
+  $('take').onclick=()=>{if(att!='B'||!open0()||th)return;endRound(true);next()};
+  $('go').onclick=()=>{b=take();if(!b)return;dk=[];for(let s=0;s<4;s++)for(let r=6;r<15;r++)dk.push({s,r});
+   for(let i=dk.length-1;i>0;i--){const j=rnd(i+1);[dk[i],dk[j]]=[dk[j],dk[i]]}
+   tr=dk[0].s;P=[];B=[];for(let i=0;i<6;i++){P.push(dk.pop());B.push(dk.pop())}srt(P);srt(B);tb=[];
+   const mt=h=>Math.min(99,...h.filter(c=>c.s==tr).map(c=>c.r)),pt=mt(P),bt=mt(B);att=pt<bt?'P':bt<pt?'B':(rnd(2)?'P':'B');
+   live=1;th=0;$('go').disabled=1;render();next()}}},
+wheel:{t:'Колесо фортуны',i:'🎯',d:'до ×5',e:5,c:'в плюс — 25%, возврат ставки — 20%',ui:`<div class="wheel" id="wn">?</div><button id="go" class="big">Крутить</button><p class="mut">Сектора: ×0 (7 шт.), ×0.5 (4), ×1 (4), ×1.5 (2), ×2, ×3, ×5.</p>`,
+ init(){const S=[0,0,0,0,0,0,0,.5,.5,.5,.5,1,1,1,1,1.5,1.5,2,3,5];
+  $('go').onclick=async()=>{const b=take();if(!b)return;$('go').disabled=1;const m=S[rnd(20)];
+   for(let i=0;i<22;i++){$('wn').textContent='×'+S[rnd(20)];await sleep(50+i*9)}
+   $('wn').textContent='×'+m;$('go').disabled=0;end(b,m,'Сектор ×'+m)}}},
+plinko:{t:'Plinko',i:'🔻',d:'до ×5, 8 рядов',e:4,c:'в плюс — 29% (края и ×2.1/×1.1)',ui:`<div class="pl"><i id="bl">🔴</i></div><div class="ps" id="ps"></div><button id="go" class="big">Бросить</button>`,
+ init(){const M=[5,2.1,1.1,1,.4,1,1.1,2.1,5];
+  $('ps').innerHTML=M.map(m=>`<b style="color:${m>1?'var(--gold)':m<1?'#ff7a8c':'var(--tx)'}">×${m}</b>`).join('');
+  $('go').onclick=async()=>{const b=take();if(!b)return;$('go').disabled=1;const bl=$('bl');[...$('ps').children].forEach(x=>x.style.outline='');
+   bl.style.transition='none';bl.style.left='50%';bl.style.top='0%';void bl.offsetWidth;bl.style.transition='';let r=0;
+   for(let n=1;n<=8;n++){r+=rnd(2);bl.style.left=(50+(2*r-n)*100/18)+'%';bl.style.top=(n*11)+'%';await sleep(300)}
+   $('ps').children[r].style.outline='2px solid var(--gold)';$('go').disabled=0;end(b,M[r],'Слот ×'+M[r])}}}
+};
+
+/* ---- бонусы ---- */
+function bonus(){const u=U(),L=lim(u);
+ $('bonus').innerHTML=`<div class="card"><h3>Ежедневный бонус</h3><p class="mut" style="margin-bottom:10px">1 000 ¢ раз в сутки, умноженные на множитель статуса.</p><button onclick="daily()">Забрать бонус</button></div>
+ <div class="card"><h3>Промокод</h3><div class="play"><input id="pi" placeholder="Введите промокод"><button onclick="promo()">Активировать</button></div><p class="mut" style="margin-top:10px">WELCOME10 · DRAGON50 · FREE25 · VIP777 (VIP+) · SPONSOR (Спонсор+)</p></div>
+ <div class="card"><h3>Вывод внутри симуляции</h3><div class="play"><input id="wa" type="number" placeholder="Сумма"><button onclick="wd()">Вывести</button></div><p class="mut" style="margin-top:10px">Лимит вывода: ${L==Infinity?'без лимита':fmt(L)+' ¢'}</p></div>
+ <div class="card"><h3>Статус</h3>${TIERS.slice(1).map((t,i)=>`<div class="tier"><h4>${t.n}</h4><p class="mut">Цена ${fmt(t.cost)} ¢ · бонус +${fmt(t.bonus)} ¢ · лимит вывода ${fmt(t.lim)} ¢ · ежедневный бонус ×${t.dm}</p><button onclick="buy(${i+1})" ${u.level>=t.l?'disabled':''}>${u.level==t.l?'Текущий статус':u.level>t.l?'У тебя выше':'Получить статус'}</button></div>`).join('')}</div>`}
+function loot(){const u=U();if(u.level<5)return;if(Date.now()-(u.lootAt||0)<1e4)return toast('Подожди несколько секунд',1);const g=500+rnd(91)*50,ok=Math.random()<.5;
+ mod(u=>{u.lootAt=Date.now();if(ok)u.frozen=(u.frozen||0)+g});toast(ok?`Залутал +${fmt(g)} ¢ — на замороженный баланс 🔒`:'Пусто, ничего не нашёл',!ok)}
+function daily(){const u=U(),w=864e5-(Date.now()-(u.daily||0));if(w>0)return toast(`Следующий бонус через ${Math.ceil(w/36e5)} ч`,1);
+ const g=1e3*(u.level>4?3:(TIERS[u.level-1]||{}).dm||1);mod(u=>{if(!u.sb)u.balance+=g;u.daily=Date.now()});toast(`Ежедневный бонус +${fmt(g)} ¢`)}
+const allP=()=>({...PROMOS,...JSON.parse(localStorage.getItem('dx_cp')||'{}')});
+function promo(){const c=$('pi').value.trim().toUpperCase(),u=U(),p=allP()[c];
+ if(!p)return toast('Такого промокода нет',1);if((u.promos||[]).includes(c))return toast('Промокод уже использован',1);if(u.level<p[1])return toast('Промокод для статуса выше',1);
+ const am=p[0],use=p[2]===false?0:Math.min(am,p[3]==null?am:p[3]),fz=am-use,pct=p[4]||0,pw=p[5]||0,sb=u.sb;
+ mod(u=>{(u.promos=u.promos||[]).push(c);if(sb)return;u.balance+=use;if(fz)u.frozen=(u.frozen||0)+fz;if(pw>0)u.pwin={until:Date.now()+864e5,p:pw};if(pct>0){const pc=u.pcap&&Date.now()<u.pcap.until?u.pcap:{left:0};u.pcap={until:Date.now()+864e5,left:pc.left+Math.floor(am*pct/100)}}});
+ $('pi').value='';toast(`Промокод принят: +${fmt(use)} ¢ на баланс`+(fz?`, ${fmt(fz)} ¢ заморожено 🔒`:'')+(pct>0?`. Макс. выигрыш за 24 ч: ${fmt(am*pct/100)} ¢`:'')+(pw>0?`. Шанс выигрыша ${pw}% на 24 ч`:''))}
+function wd(){const a=Math.floor(+$('wa').value),u=U();if(!(a>0))return toast('Введи сумму вывода',1);if(a>u.balance)return toast('Не хватает коинов',1);if(a>lim(u))return toast('Превышен лимит вывода',1);
+ mod(u=>u.balance-=a);$('wa').value='';toast(`Выведено ${fmt(a)} ¢`)}
+function buy(i){const t=TIERS[i],u=U();if(u.level>=t.l)return toast('У тебя уже этот статус или выше',1);if(u.balance<t.cost)return toast(`Нужно ${fmt(t.cost)} ¢`,1);
+ mod(u=>{u.balance+=t.bonus-t.cost;Object.assign(u,{role:t.n,level:t.l,limit:t.lim})});bonus();toast(`Статус «${t.n}» получен: +${fmt(t.bonus)} ¢`)}
+
+/* ---- админка ---- */
+function cpList(){const c=JSON.parse(localStorage.getItem('dx_cp')||'{}'),k=Object.keys(c);
+ $('cpl').innerHTML=k.length?k.map(n=>`<li><span>${n} · ${fmt(c[n][0])} ¢ · ${c[n][2]===false?'всё заморожено':'можно использовать '+fmt(c[n][3])} · ${c[n][4]?'макс. выигрыш '+c[n][4]+'% · ':''}${c[n][5]?'шанс '+c[n][5]+'% · ':''}${TIERS[c[n][1]-1].n}${c[n][1]>1?'+':''}</span><button class="ghost sm" onclick="delPromo('${n}')">Удалить</button></li>`).join(''):'<li><span class="mut">Своих промокодов пока нет.</span></li>'}
+function mkPromo(){if(U().level<5)return;const n=$('pc').value.trim().toUpperCase().replace(/[^A-Z0-9А-ЯЁ_-]/g,''),a=Math.floor(+$('pa').value);
+ if(!n)return toast('Введи код',1);if(!(a>0))return toast('Введи сумму',1);if(PROMOS[n])return toast('Этот код уже занят',1);
+ const c=JSON.parse(localStorage.getItem('dx_cp')||'{}');const us=$('pu').value=='1',un=Math.floor(+$('pn').value)||a,pp=Math.max(0,+$('pp').value||0);c[n]=[a,+$('pl').value,us,Math.min(a,un),pp,Math.min(100,Math.max(0,Math.floor(+$('pw').value||0)))];localStorage.setItem('dx_cp',JSON.stringify(c));$('pc').value='';$('pa').value='';$('pn').value='';$('pp').value='';$('pw').value='';cpList();toast(`Промокод ${n} создан: +${fmt(a)} ¢`)}
+function delPromo(n){if(U().level<5)return;const c=JSON.parse(localStorage.getItem('dx_cp')||'{}');delete c[n];localStorage.setItem('dx_cp',JSON.stringify(c));cpList();toast('Промокод удалён')}
+function adm(k){if(U().level<5)return;const n=$('an').value.trim(),a=Math.floor(+$('aa').value),d=DB();
+ if(!d[n])return toast('Игрок не найден',1);
+ if(k!='role'&&k!='sb'&&k!='unsb'&&!(a>0))return toast('Введи сумму',1);
+ if(k=='sb'||k=='unsb'){if(n==me||d[n].level>=U().level)return toast('Нельзя: у игрока такая же или выше роль',1);d[n].sb=k=='sb';SV(d);return toast(k=='sb'?`Теневой бан: ${n}`:`Теневой бан снят: ${n}`)}
+ if(k=='give'){const b0=d[n].balance;d[n].balance+=a;const z=capU(d[n],b0);toast(`Выдано ${fmt(a)} ¢ игроку ${n}`+(z?` (${fmt(z)} ¢ заморожено)`:''))}
+ if(k=='take'){d[n].balance=Math.max(0,d[n].balance-a);toast(`Забрано ${fmt(a)} ¢ у ${n}`)}
+ if(k=='role'){const t=TIERS[+$('ar').value];Object.assign(d[n],{role:t.n,level:t.l,limit:t.lim});toast(`${n}: ${t.n}`)}
+ SV(d);if(n==me)paint()}
+
+{const c=localStorage.getItem('dx_current');if(c&&DB()[c])enter(c)}
+</script></body></html>
